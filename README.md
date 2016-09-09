@@ -1,1 +1,1 @@
-This is MyOS project.
+This project contains UNIted Operation System, wich unites x86 and ARM architectures.
