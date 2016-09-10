@@ -1,4 +1,6 @@
-COMPPARAMS = -m32
+COMPPARAM = -m32
 
 %.o: %.cpp
-	g++ $(COMPPARAMS) -o $@ -c $<
+	g++ $(COMPPARAM) -o $@ -c $< #компилим все срр файлы с ключем -с для генерации именно обджект файла
+%.o: %.s
+	nasm $(NASMPARAM) -o $@ 
