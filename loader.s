@@ -1,6 +1,7 @@
 .set MAGICNUM, 0x1badb002 #создали MAGICNUM со значением магического числа, чтобы GRUB распознал наше ядро.
 .set ALIGN, 1<<0 		  #выравнивание по границам
 .set MEMINFO, 1<<1 		  #карта памяти 
+.set FLAGS, (ALIGN | MEMINFO) 
 .set CHECKSUM, -(MAGICNUM + FLAGS) #контрольная сумма, чтобы понять, что мы в multiboot
 
 .section .multiboot
