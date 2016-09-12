@@ -15,6 +15,8 @@
 
 loader:
     mov $kernel_stack, %esp #stack pointer указывающий на стек ядра.
+    push %eax
+    push %ebx
     call kernelMain			#вызов функции
     
  _stop:				#новая метка для inf loop, сраховка после inf loop в kernelMain
