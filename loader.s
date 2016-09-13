@@ -6,7 +6,7 @@
 
 .section .multiboot
 	.align 4
-	.long MAGIC
+	.long MAGICNUM
 	.long FLAGS
 	.long CHECKSUM
 

@@ -4,7 +4,7 @@ void printf(char* str){
 		VideoMemory[i] = (VideoMemory [i] & 0xFF00) | str[i]; //побитовое умножение и сложение, чтобы не перетирать 8бит цвета.
 }
 
-void kernelMain(void* multiboot_structure, unsigned int magicnumber){
+extern "C" void kernelMain(void* multiboot_structure, unsigned int magicnumber){
     printf("Welcome to UNI OS v.0.1\n Copyright by Nefedov & Serkov. Moscow 2016.");
     
     while(1); //inf loop. Ядро же не может остановиться, лол
