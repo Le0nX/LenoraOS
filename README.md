@@ -1,2 +1,2 @@
-# LenoraOS
-Lenora is an OS which supports x86 and ARM architectire.
+# Lenora OS
+Lenora is an Operating System which supports x86 and ARM architectire.
