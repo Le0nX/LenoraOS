@@ -12,7 +12,7 @@ SECTIONS
 	{
 		*(.multiboot)
 		*(.text)
-		*(.rodata) /*думаю, что здесь .bss*/
+		*(.rodata) /*read only data*/
 	}
 
 	.data :
