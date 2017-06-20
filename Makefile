@@ -18,6 +18,6 @@ LenoraKernel.bin: linker.ld $(objects)
 	ld $(LDFLAGS) -T $< -o $@ $(objects)
 	
 install: LenoraKernel.bin
-	sudo cp /boot/LenoraKernel.bin
+	sudo cp $< /boot/LenoraKernel.bin
 	
 	
