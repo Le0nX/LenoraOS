@@ -19,7 +19,7 @@
 
 #Конец магии multiboot. Объявляем стандартные секции.
 .section .text
-.extern main					#вызов main() из другого файла
+.extern kmain					#вызов kmain() из другого файла
 .global loader
 
 
@@ -33,7 +33,7 @@ loader:
 
 	push %eax					#передаем указатель на структуру в main				
 	push %ebx					#передаем MAGIC в main		
-	call main
+	call kmain
 	
 _trap:							#infloop для подстраховки ядра
 	cli

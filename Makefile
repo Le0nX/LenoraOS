@@ -2,7 +2,7 @@
 CC=g++
 AS=as
 
-CFLAGS=-m32 -Wall -fno-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -c
+CFLAGS=-m32 -Wall -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -c
 ASFLAGS=--32
 LDFLAGS=-melf_i386
 
