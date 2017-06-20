@@ -14,7 +14,7 @@ objects = loader.o kernel.o
 %.o: %.s
 	$(AS) $(ASFLAGS) -o $@ $<
 	
-LenoraKernel: linker.ld $(objects)
+LenoraKernel.bin: linker.ld $(objects)
 	ld $(LDFLAGS) -T $< -o $@ $(objects)
 	
 install: LenoraKernel.bin
