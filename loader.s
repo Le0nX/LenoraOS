@@ -20,6 +20,7 @@
 #Конец магии multiboot. Объявляем стандартные секции.
 .section .text
 .extern kmain					#вызов kmain() из другого файла
+.extern callConstructors		#инициализация конструктора
 .global loader
 
 
@@ -27,6 +28,8 @@ loader:
 	mov $kernel_stack, %esp 	#c++ требует ,чтобы stack_pointer был установлен
 								#вначале стека.
 								
+	call callConstructors							
+
 #после того, как bootloader понял, что это ядро, то он сохранит в RAM
 #bootloader_structure, в которой будет различная информация о системе.
 #После создания	структуры он сохранит указатель на нее в %eax, а MAGIC в %ebx
