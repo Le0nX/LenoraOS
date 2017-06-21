@@ -1,4 +1,6 @@
 
+#include "types.h"
+
 enum vga_color{
 	VGA_COLOR_BLACK = 0,
 	VGA_COLOR_BLUE = 1,
@@ -18,11 +20,11 @@ enum vga_color{
 	VGA_COLOR_WHITE = 15,
 };
 
-void printf(char *str)
+void printf(int8_t *str)
 {
-	unsigned short* VideoMem = (unsigned short*)0xb8000;
+	uint16_t* VideoMem = (uint16_t*)0xb8000;
 	
-	for (int i=0; str[i] != '\0'; ++i){
+	for (int32_t i=0; str[i] != '\0'; ++i){
 		VideoMem[i] = (VideoMem[i] & 0xFF00) | str[i];
 	}
 }
@@ -42,7 +44,7 @@ extern "C" void callConstructors()
 		(*i)();
 }
 
-extern "C" void kmain(void *multiboot_struct, unsigned int MAGIC)
+extern "C" void kmain(void *multiboot_struct, uint32_t MAGIC)
 {
 	printf("Welcome to Lenora OS...");
 	
