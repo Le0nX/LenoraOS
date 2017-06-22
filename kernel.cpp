@@ -1,5 +1,6 @@
 
 #include "types.h"
+#include "gdt.h"
 
 enum vga_color{
 	VGA_COLOR_BLACK = 0,
@@ -47,6 +48,7 @@ extern "C" void callConstructors()
 extern "C" void kmain(void *multiboot_struct, uint32_t MAGIC)
 {
 	printf("Welcome to Lenora OS...");
+	GlobalDescriptorTable gdt;
 	
 	while(1);
 }
