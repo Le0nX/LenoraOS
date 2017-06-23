@@ -25,8 +25,37 @@ void printf(int8_t *str)
 {
 	uint16_t* VideoMem = (uint16_t*)0xb8000;
 	
+	static uint8_t x=0, y=0;   // x-символ, y-строка. Всего 25 строк по 80
+	
 	for (int32_t i=0; str[i] != '\0'; ++i){
-		VideoMem[i] = (VideoMem[i] & 0xFF00) | str[i];
+		
+		switch(str[i])
+		{	
+			case '\n':
+					y++;
+					x=0;
+					break;
+			
+			default:
+					VideoMem[80*y+x] = (VideoMem[80*y+x] & 0xFF00) | str[i];
+					x++;
+					break;
+		}
+		
+		if(x >= 80){
+			y++;
+			x=0;
+		}
+		
+		if(y >= 25){
+			
+			for(y = 0; y < 25; y++)
+				for(x = 0; x < 80; x++)
+					VideoMem[80*y+x] = (VideoMem[80*y+x] & 0xFF00) | ' ';
+			
+			x=0;
+			y=0;
+		}
 	}
 }
 
@@ -47,7 +76,9 @@ extern "C" void callConstructors()
 
 extern "C" void kmain(void *multiboot_struct, uint32_t MAGIC)
 {
-	printf("Welcome to Lenora OS...");
+	printf("Welcome to Lenora OS...\n");
+	printf("Moscow 2017");
+
 	GlobalDescriptorTable gdt;
 	
 	while(1);
