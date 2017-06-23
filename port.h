@@ -16,6 +16,7 @@
   public:	  
 	 Port8bit(uint16_t portnumber);
 	 ~Port8bit();  
+	 
 	 virtual void Write(uint8_t data);
 	 virtual uint8_t Read();
   };     
@@ -25,7 +26,8 @@
   {
   public:	  
 	 Port8bitSlow(uint16_t portnumber);
-	 ~Port8bitSlow();  
+	 ~Port8bitSlow();
+	   
 	 virtual void Write(uint8_t data);
   };   
 
@@ -33,7 +35,8 @@
   {
   public:	  
 	 Port16bit(uint16_t portnumber);
-	 ~Port16bit();  
+	 ~Port16bit();
+	   
 	 virtual void Write(uint16_t data);
 	 virtual uint16_t Read();
   };
@@ -42,7 +45,8 @@
   {
   public:	  
 	 Port32bit(uint16_t portnumber);
-	 ~Port32bit();  
+	 ~Port32bit();
+	   
 	 virtual void Write(uint32_t data);
 	 virtual uint32_t Read();
   };
