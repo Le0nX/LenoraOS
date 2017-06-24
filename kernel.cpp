@@ -1,6 +1,7 @@
 
 #include "types.h"
 #include "gdt.h"
+#include "interrupt.h"
 
 enum vga_color{
 	VGA_COLOR_BLACK = 0,
@@ -80,6 +81,10 @@ extern "C" void kmain(void *multiboot_struct, uint32_t MAGIC)
 	printf("Moscow 2017");
 
 	GlobalDescriptorTable gdt;
+	InterruptManager interrupts(&gdt);
+	
+	interrupts.Activate();
+	
 	
 	while(1);
 }
