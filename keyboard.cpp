@@ -33,6 +33,10 @@ uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp)
 			case 0xFA: break;               // init key пропускаем
 			case 0x45: case 0xC5:  break;   // virtual box охуел. numlock активирует. Пропускаем...
 			
+			//блок для цифр
+			case 0x29: printf("`"); break;
+			case 0x02: printf("1"); break;
+			
 			//блок для первой строки q-]
 			case 0x10: printf("q"); break;
 			case 0x11: printf("w"); break;
