@@ -79,7 +79,7 @@ extern "C" void callConstructors()
 extern "C" void kmain(void *multiboot_struct, uint32_t MAGIC)
 {
 	printf("Welcome to Lenora OS...\n");
-	printf("Moscow 2017");
+	printf("Moscow 2017\n");
 
 	GlobalDescriptorTable gdt;
 	InterruptManager interrupts(&gdt);
