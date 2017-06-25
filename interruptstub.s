@@ -1,4 +1,4 @@
-.set IRQ_BASE, 0x20
+.set IRQ_BASE, 0x20  #зарезервированны CPU для Exceptions
 
 .section .text
 

@@ -4,6 +4,8 @@
 
 InterruptManager::GateDescriptor InterruptManager::interruptDescriptorTable[256];
 
+InterruptManager* InterruptManager::ActiveInterruptManager = 0;
+
 void InterruptManager::SetInterruptDescriptorTableEntry(
 			uint8_t interruptNumber,
 			uint16_t codeSegmentSellectorOffset,
@@ -30,7 +32,7 @@ InterruptManager::InterruptManager(GlobalDescriptorTable* gdt)
    picSlaveData(0xA1)
 {
 	uint16_t CodeSegment = gdt->CodeSegmentSelector();
-	const uint8_t IDT_INTERRUPT_GATE = 0xE;
+	const uint8_t IDT_INTERRUPT_GATE = 0xE;  // wiki.osdev.org/Interrupts
 	
 	for(uint16_t i=0; i < 256; i++)
 		SetInterruptDescriptorTableEntry(i, CodeSegment, &IgnoreInterruptRequest, 0, IDT_INTERRUPT_GATE);
@@ -64,8 +66,21 @@ InterruptManager::InterruptManager(GlobalDescriptorTable* gdt)
 InterruptManager::~InterruptManager()
 {}
 
+void InterruptManager::Deactivate()
+{	
+	if (ActiveInterruptManager == this){
+		
+		ActiveInterruptManager = 0;
+		asm("cli"); 
+	
+	}
+}
+
 void InterruptManager::Activate()
-{
+{	
+	if (ActiveInterruptManager != 0)
+		ActiveInterruptManager->Deactivate();
+	ActiveInterruptManager = this;
 	asm("sti");      // start use interrupts!
 }
 
@@ -74,7 +89,24 @@ void printf(char* str);
 
 uint32_t InterruptManager::handleInterrupt(uint8_t interruptNumber, uint32_t esp)
 {
-	printf("INTERRUPT\n");
+	if (ActiveInterruptManager != 0)
+		ActiveInterruptManager->DoHandleInterrupt(interruptNumber, esp);	
+	return esp;
+}
+
+uint32_t InterruptManager::DoHandleInterrupt(uint8_t interruptNumber, uint32_t esp)
+{
+	if (interruptNumber != 0x20)
+		printf("INT ");
+	
+	if (0x20 <= interruptNumber && interruptNumber < 0x30){
+	
+		picMasterComand.Write(0x20);
+		if (0x28 <=interruptNumber && interruptNumber < 0x30)
+			picSlaveComand.Write(0x20);
+			
+	}
+		
 	
 	return esp;
 }

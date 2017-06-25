@@ -8,6 +8,9 @@
   class InterruptManager
   {
 	  protected:
+	  
+	  static InterruptManager* ActiveInterruptManager;
+	  
 	  // Структура, описывающая шлюз прерываний.
 			struct GateDescriptor
 			{
@@ -51,9 +54,10 @@
 			~InterruptManager();
 			
 			void Activate();
+			void Deactivate();
 			
 			static uint32_t handleInterrupt(uint8_t interruptNumber, uint32_t esp);
-			
+			uint32_t DoHandleInterrupt(uint8_t interruptNumber, uint32_t esp);
 // Эти внешние директивы позволят нам получить доступ к адресам наших ассемблерных обработчиков прерываний ISR.			
 			static void 	IgnoreInterruptRequest();
 			static void     HandleInterruptRequest0x00();
