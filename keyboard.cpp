@@ -4,12 +4,12 @@
 void printf(const char*);
 
 KeyboardDriver::KeyboardDriver(InterruptManager* manager)
-: InterruptHandler(0x21, manager),
+: InterruptHandler(0x21, manager),   //number of keyboard interrupt 0x01 + 0x20 base
   dataport(0x60),
   commandport(0x64)
 {
 	while(commandport.Read() & 0x1)   // если зажата клавиша
-	dataport.Read();
+		dataport.Read();
 	commandport.Write(0xAE);   // активировать прерывания клавиатуры
 	commandport.Write(0x20);   // получить текущее состояние
 	uint8_t status = (dataport.Read() | 1) & ~0x10; // set правый бит в 1 и clear 5й бит
