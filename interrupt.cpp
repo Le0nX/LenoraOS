@@ -109,7 +109,7 @@ void InterruptManager::Activate()
 }
 
 
-void printf(char* str);
+void printf(const char* str);
 
 uint32_t InterruptManager::handleInterrupt(uint8_t interruptNumber, uint32_t esp)
 {
@@ -126,8 +126,8 @@ uint32_t InterruptManager::DoHandleInterrupt(uint8_t interruptNumber, uint32_t e
 		
 	} else if (interruptNumber != 0x20){
 		
-		char* text = "UNHANDLED INTERRUPT 0x00";
-		char* hex = "0123456789ABCDEF";
+		char text[] = "UNHANDLED INTERRUPT 0x00";
+		char hex[] = "0123456789ABCDEF";
 		text[22] = hex[(interruptNumber >> 4) & 0x0F];
 		text[23] = hex[interruptNumber & 0x0F];
 		

@@ -23,7 +23,7 @@ enum vga_color{
 	VGA_COLOR_WHITE = 15,
 };
 
-void printf(int8_t *str)
+void printf(const char* str)
 {
 	uint16_t* VideoMem = (uint16_t*)0xb8000;
 	

@@ -1,7 +1,7 @@
 
 #include "keyboard.h"
 
-void printf(char*);
+void printf(const char*);
 
 KeyboardDriver::KeyboardDriver(InterruptManager* manager)
 : InterruptHandler(0x21, manager),
@@ -74,8 +74,8 @@ uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp)
 			
 			if(key < 0x80){  // пропускаем коды отпуска клавиши. Только нажатие.
 
-				char* text = "KEY PRESSED 0x00";
-				char* hex = "0123456789ABCDEF";
+				char text[] = "KEY PRESSED 0x00";
+				char hex[] = "0123456789ABCDEF";
 				text[13] = hex[(key >> 4) & 0x0F];
 				text[14] = hex[key & 0x0F];  
 				printf(text);
