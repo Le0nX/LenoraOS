@@ -1,27 +1,26 @@
 
 #include "interrupt.h"
 
+void printf(const char* str);
+
 
 
 InterruptHandler::InterruptHandler(uint8_t interruptNumber, InterruptManager* interruptManager)
 {
 	this->interruptNumber = interruptNumber;
 	this->interruptManager = interruptManager;
-	interruptManager->handlers[interruptNumber] = this;
+	interruptManager->handlers[interruptNumber] = this;   // добавляем в список хендлеров
 }
 InterruptHandler::~InterruptHandler()
 {
 	if (interruptManager->handlers[interruptNumber] == this)
-		interruptManager->handlers[interruptNumber] = 0;
+		interruptManager->handlers[interruptNumber] = 0;  // удаляем из списка
 }
  
 uint32_t InterruptHandler::HandleInterrupt(uint32_t esp)
 {
 	return esp;
 }
-
-
-
 
 
 InterruptManager::GateDescriptor InterruptManager::interruptDescriptorTable[256];
@@ -45,7 +44,6 @@ void InterruptManager::SetInterruptDescriptorTableEntry(
 	
 }
 
-
 			
 InterruptManager::InterruptManager(GlobalDescriptorTable* gdt)
  : picMasterComand(0x20),     // номера портов
@@ -63,6 +61,7 @@ InterruptManager::InterruptManager(GlobalDescriptorTable* gdt)
 		
 	SetInterruptDescriptorTableEntry(0x20, CodeSegment, &HandleInterruptRequest0x00, 0, IDT_INTERRUPT_GATE);  // HandleInterruptRequest0x00
 	SetInterruptDescriptorTableEntry(0x21, CodeSegment, &HandleInterruptRequest0x01, 0, IDT_INTERRUPT_GATE);  // HandleInterruptRequest0x01
+	SetInterruptDescriptorTableEntry(0x2C, CodeSegment, &HandleInterruptRequest0x0C, 0, IDT_INTERRUPT_GATE);  // HandleInterruptRequest0x0C
 
 	picMasterComand.Write(0x11);
 	picSlaveComand.Write(0x11);
@@ -109,8 +108,6 @@ void InterruptManager::Activate()
 }
 
 
-void printf(char* str);
-
 uint32_t InterruptManager::handleInterrupt(uint8_t interruptNumber, uint32_t esp)
 {
 	if (ActiveInterruptManager != 0)
@@ -126,8 +123,8 @@ uint32_t InterruptManager::DoHandleInterrupt(uint8_t interruptNumber, uint32_t e
 		
 	} else if (interruptNumber != 0x20){
 		
-		char* text = "UNHANDLED INTERRUPT 0x00";
-		char* hex = "0123456789ABCDEF";
+		char text[] = "UNHANDLED INTERRUPT 0x00";
+		char hex[] = "0123456789ABCDEF";
 		text[22] = hex[(interruptNumber >> 4) & 0x0F];
 		text[23] = hex[interruptNumber & 0x0F];
 		
@@ -141,7 +138,6 @@ uint32_t InterruptManager::DoHandleInterrupt(uint8_t interruptNumber, uint32_t e
 			picSlaveComand.Write(0x20);
 			
 	}
-		
-	
+			
 	return esp;
 }

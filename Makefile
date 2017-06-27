@@ -6,7 +6,7 @@ CFLAGS=-m32 -Wall -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exce
 ASFLAGS=--32
 LDFLAGS=-melf_i386
 
-objects = loader.o gdt.o port.o interruptstub.o interrupt.o keyboard.o kernel.o
+objects = loader.o gdt.o port.o interruptstub.o interrupt.o keyboard.o mouse.o kernel.o
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) $< -o $@ 

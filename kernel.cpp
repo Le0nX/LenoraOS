@@ -3,6 +3,7 @@
 #include "gdt.h"
 #include "interrupt.h"
 #include "keyboard.h"
+#include "mouse.h"
 
 enum vga_color{
 	VGA_COLOR_BLACK = 0,
@@ -23,7 +24,7 @@ enum vga_color{
 	VGA_COLOR_WHITE = 15,
 };
 
-void printf(int8_t *str)
+void printf(const char* str)
 {
 	uint16_t* VideoMem = (uint16_t*)0xb8000;
 	
@@ -85,7 +86,8 @@ extern "C" void kmain(void *multiboot_struct, uint32_t MAGIC)
 	InterruptManager interrupts(&gdt);
 	
 	KeyboardDriver keyboard(&interrupts);
-	
+	MouseDriver mouse(&interrupts);
+
 	interrupts.Activate();
 	
 	
