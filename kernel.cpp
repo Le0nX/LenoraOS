@@ -2,6 +2,7 @@
 #include "types.h"
 #include "gdt.h"
 #include "interrupt.h"
+#include "driver.h"
 #include "keyboard.h"
 #include "mouse.h"
 
@@ -85,8 +86,15 @@ extern "C" void kmain(void *multiboot_struct, uint32_t MAGIC)
 	GlobalDescriptorTable gdt;
 	InterruptManager interrupts(&gdt);
 	
+	DriverManager drvManager;
+	
 	KeyboardDriver keyboard(&interrupts);
+	drvManager.AddDriver(&keyboard);
+	
 	MouseDriver mouse(&interrupts);
+	drvManager.AddDriver(&mouse);
+	
+	drvManager.ActivateAll();
 
 	interrupts.Activate();
 	

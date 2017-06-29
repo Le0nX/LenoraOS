@@ -4,10 +4,11 @@
 
 #include "types.h"
 #include "interrupt.h"
+#include "driver.h"
 #include "port.h"
 
 
-class MouseDriver : public InterruptHandler
+class MouseDriver : public InterruptHandler, public Driver
 {
 	
     Port8bit dataport;
@@ -23,6 +24,7 @@ public:
 	~MouseDriver();
 	
 	virtual uint32_t HandleInterrupt(uint32_t esp);
+	virtual void Activate();
 
 };
 
