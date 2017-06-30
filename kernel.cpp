@@ -67,7 +67,8 @@ void printf(const char* str)
  * Вызов конструкторов из секции начинающейся в start_ctors 
  * и заканчивающейся в end_ctors. Создается указатель на    
  * функцию типа void и функция callCoonstructors, которая   
- * вызывает все анонимные функции конструкторов из секции.  
+ * вызывает все анонимные функции конструкторов из секции.
+ * Это связано с особенностью C++.  
  */
 typedef void (*constructor)();
 extern "C" constructor start_ctors;
@@ -78,6 +79,17 @@ extern "C" void callConstructors()
 		(*i)();
 }
 
+class PrintKeyboardEventHandler : public KeyboardEventHandler
+{
+	public:
+		void OnKeyDown(char c)
+		{
+			char *x = " ";
+			x[0] = c;
+			printf(x);
+		}
+};
+
 extern "C" void kmain(void *multiboot_struct, uint32_t MAGIC)
 {
 
@@ -86,8 +98,9 @@ extern "C" void kmain(void *multiboot_struct, uint32_t MAGIC)
 	printf("Initializing GDT & Hardaware...\n");
 	
 	DriverManager drvManager;
+	PrintKeyboardEventHandler kbhandler;
 	
-	KeyboardDriver keyboard(&interrupts);
+	KeyboardDriver keyboard(&interrupts, &kbhandler);
 	drvManager.AddDriver(&keyboard);
 	printf("Keyboard is ready...\n");
 	
