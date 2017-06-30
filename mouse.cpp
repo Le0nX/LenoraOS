@@ -12,7 +12,7 @@ MouseDriver::MouseDriver(InterruptManager* manager)
 MouseDriver::~MouseDriver()
 {}
 
-MouseDriver::Activate()
+void MouseDriver::Activate()
 {
 	offset = 0;
 	buttons = 0;

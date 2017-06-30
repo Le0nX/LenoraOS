@@ -11,7 +11,7 @@
 		
 		virtual void Activate();
 		virtual int Reset();
-		virtual void Deatcivate;  
+		virtual void Deatcivate();  
   };
 
 

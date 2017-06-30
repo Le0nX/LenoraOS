@@ -80,24 +80,29 @@ extern "C" void callConstructors()
 
 extern "C" void kmain(void *multiboot_struct, uint32_t MAGIC)
 {
-	printf("Welcome to Lenora OS...\n");
-	printf("Moscow 2017\n");
 
 	GlobalDescriptorTable gdt;
 	InterruptManager interrupts(&gdt);
+	printf("Initializing GDT & Hardaware...\n");
 	
 	DriverManager drvManager;
 	
 	KeyboardDriver keyboard(&interrupts);
 	drvManager.AddDriver(&keyboard);
+	printf("Keyboard is ready...\n");
 	
 	MouseDriver mouse(&interrupts);
 	drvManager.AddDriver(&mouse);
+	printf("Mouse is ready...\n");
 	
 	drvManager.ActivateAll();
+	printf("Activating all drivers.\n");
 
 	interrupts.Activate();
+	printf("Interrupts are activated.\n");
 	
+	printf("Welcome to Lenora OS...\n");
+	printf("Moscow 2017\n");
 	
 	while(1);
 }

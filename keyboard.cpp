@@ -12,7 +12,7 @@ KeyboardDriver::KeyboardDriver(InterruptManager* manager)
 KeyboardDriver::~KeyboardDriver()
 {}
 
-KeyboardDriver::Activate()
+void KeyboardDriver::Activate()
 {
 	while(commandport.Read() & 0x1)   // если зажата клавиша
 		dataport.Read();
