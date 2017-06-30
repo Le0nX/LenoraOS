@@ -7,9 +7,21 @@
 #include "driver.h"
 #include "port.h"
 
+class MouseEventHandler
+{
+	int8_t x, y;
+public:
+	MouseEventHandler();
+	virtual void OnMouseActivate();
+	virtual void OnMouseDown(uint8_t button);
+	virtual void OnMouseUp(uint8_t button);
+	virtual void OnMouseMove(int x, int y);
+};
+
 
 class MouseDriver : public InterruptHandler, public Driver
 {
+	MouseEventHandler* handler;
 	
     Port8bit dataport;
     Port8bit commandport;
@@ -20,7 +32,7 @@ class MouseDriver : public InterruptHandler, public Driver
 	
 public:
     
-	MouseDriver(InterruptManager* manager);
+	MouseDriver(InterruptManager* manager, MouseEventHandler* handler);
 	~MouseDriver();
 	
 	virtual uint32_t HandleInterrupt(uint32_t esp);
