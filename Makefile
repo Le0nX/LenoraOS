@@ -2,16 +2,26 @@
 CC=g++
 AS=as
 
-CFLAGS=-m32 -Wall -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -c
+CFLAGS=-m32 -Iinclude -Wall -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -c
 ASFLAGS=--32
 LDFLAGS=-melf_i386
 
-objects = loader.o gdt.o driver.o port.o interruptstub.o interrupt.o keyboard.o mouse.o kernel.o
+objects = obj/loader.o \
+		  obj/gdt.o \
+		  obj/drivers/driver.o \
+		  obj/hardware/port.o \
+		  obj/hardware/interruptstub.o \
+		  obj/hardware/interrupt.o \
+		  obj/drivers/keyboard.o \
+		  obj/drivers/mouse.o \
+		  obj/kernel.o
 
-%.o: %.cpp
+obj/%.o: src/%.cpp
+	mkdir -p $(@D)
 	$(CC) $(CFLAGS) $< -o $@ 
 	
-%.o: %.s
+obj/%.o: src/%.s
+	mkdir -p $(@D)
 	$(AS) $(ASFLAGS) -o $@ $<
 	
 LenoraKernel.bin: linker.ld $(objects)
@@ -42,4 +52,4 @@ run: burniso
 	
 .PHONY: clean
 clean:
-	rm -f $(objects) LenoraKernel.bin Lenora.iso
+	rm -rf obj LenoraKernel.bin Lenora.iso
