@@ -4,21 +4,34 @@
 
 #include "types.h"
 #include "interrupt.h"
+#include "driver.h"
 #include "port.h"
 
 
-class KeyboardDriver : public InterruptHandler
+class KeyboardEventHandler
+{
+public:
+	KeyboardEventHandler();
+	virtual void OnKeyDown(char);
+	virtual void OnKeyUp(char);
+	
+};
+
+class KeyboardDriver : public InterruptHandler, public Driver
 {
 	
     Port8bit dataport;
     Port8bit commandport;
-
+	
+	KeyboardEventHandler* handler;
 public:
     
-	KeyboardDriver(InterruptManager* manager);
+	KeyboardDriver(InterruptManager* manager, KeyboardEventHandler* handler);
 	~KeyboardDriver();
 	
 	virtual uint32_t HandleInterrupt(uint32_t esp);
+	virtual void Activate();
+
 
 };
 

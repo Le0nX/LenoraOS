@@ -2,6 +2,7 @@
 #include "types.h"
 #include "gdt.h"
 #include "interrupt.h"
+#include "driver.h"
 #include "keyboard.h"
 #include "mouse.h"
 
@@ -66,7 +67,8 @@ void printf(const char* str)
  * Вызов конструкторов из секции начинающейся в start_ctors 
  * и заканчивающейся в end_ctors. Создается указатель на    
  * функцию типа void и функция callCoonstructors, которая   
- * вызывает все анонимные функции конструкторов из секции.  
+ * вызывает все анонимные функции конструкторов из секции.
+ * Это связано с особенностью C++.  
  */
 typedef void (*constructor)();
 extern "C" constructor start_ctors;
@@ -77,19 +79,99 @@ extern "C" void callConstructors()
 		(*i)();
 }
 
+class PrintKeyboardEventHandler : public KeyboardEventHandler
+{
+	public:
+		virtual void OnKeyDown(char c)
+		{
+			char *x = " ";
+			x[0] = c;
+			printf(x);
+		}
+};
+
+
+class ConsoleMouse : public MouseEventHandler
+{
+		int8_t x, y;
+	public:
+		ConsoleMouse()
+		{}
+		
+		virtual void OnMouseActivate()
+		{
+			uint16_t* VideoMem = (uint16_t*)0xb8000;
+			x = 40;  // инициализируем мышь по-центру
+			y = 12;
+			VideoMem[80*y+x] = ((VideoMem[80*y+x] & 0xF000) >> 4) // swap
+							 | ((VideoMem[80*y+x] & 0x0F00) << 4) // color
+							 |  (VideoMem[80*y+x] & 0x00FF);      // bits	
+		}
+		
+		virtual void OnMouseDown(uint8_t button)
+		{
+			uint16_t* VideoMem = (uint16_t*)0xb8000;
+			VideoMem[80*y+x] = ((VideoMem[80*y+x] & 0xF000) >> 4) // swap
+							 | ((VideoMem[80*y+x] & 0x0F00) << 4) // color
+							 |  (VideoMem[80*y+x] & 0x00FF);      // bits	
+		}
+		
+		virtual void OnMouseUp(uint8_t button)
+		{
+			uint16_t* VideoMem = (uint16_t*)0xb8000;
+			VideoMem[80*y+x] = ((VideoMem[80*y+x] & 0xF000) >> 4) // swap
+							 | ((VideoMem[80*y+x] & 0x0F00) << 4) // color
+							 |  (VideoMem[80*y+x] & 0x00FF);      // bits
+		}
+		
+		virtual void OnMouseMove(int x_offset, int y_offset)
+		{
+			static uint16_t* VideoMem = (uint16_t*)0xb8000;
+			VideoMem[80*y+x] = ((VideoMem[80*y+x] & 0xF000) >> 4) // swap
+							 | ((VideoMem[80*y+x] & 0x0F00) << 4) // color
+							 |  (VideoMem[80*y+x] & 0x00FF);      // bits
+											
+			x += x_offset;
+			if (x<0) x = 0;
+			if (x>=80) x = 79;
+			
+			y += y_offset;
+			if (y<0) y = 0;
+			if (y>=25) y = 24;
+			
+			VideoMem[80*y+x] = ((VideoMem[80*y+x] & 0xF000) >> 4) // swap
+							 | ((VideoMem[80*y+x] & 0x0F00) << 4) // color
+							 |  (VideoMem[80*y+x] & 0x00FF);       // bits
+		}
+};
+
 extern "C" void kmain(void *multiboot_struct, uint32_t MAGIC)
 {
-	printf("Welcome to Lenora OS...\n");
-	printf("Moscow 2017\n");
 
 	GlobalDescriptorTable gdt;
 	InterruptManager interrupts(&gdt);
+	printf("Initializing GDT & Hardaware...\n");
 	
-	KeyboardDriver keyboard(&interrupts);
-	MouseDriver mouse(&interrupts);
+	DriverManager drvManager;
+	
+	PrintKeyboardEventHandler kbhandler;
+	KeyboardDriver keyboard(&interrupts, &kbhandler);
+	drvManager.AddDriver(&keyboard);
+	printf("Keyboard is ready...\n");
+	
+	ConsoleMouse mshandler;
+	MouseDriver mouse(&interrupts, &mshandler);
+	drvManager.AddDriver(&mouse);
+	printf("Mouse is ready...\n");
+	
+	drvManager.ActivateAll();
+	printf("Activating all drivers.\n");
 
 	interrupts.Activate();
+	printf("Interrupts are activated.\n");
 	
+	printf("Welcome to Lenora OS...\n");
+	printf("Moscow 2017\n");
 	
 	while(1);
 }
