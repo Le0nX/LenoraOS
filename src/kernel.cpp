@@ -67,6 +67,15 @@ void printf(const char* str)
 	}
 }
 
+void hexPrint(uint8_t key)
+ {
+     char* x = "00";
+     char* hex = "0123456789ABCDEF";
+     x[0] = hex[(key >> 4) & 0xF];
+     x[1] = hex[key & 0xF];
+     printf(x);
+ }
+
 /**
  * Вызов конструкторов из секции начинающейся в start_ctors 
  * и заканчивающейся в end_ctors. Создается указатель на    
