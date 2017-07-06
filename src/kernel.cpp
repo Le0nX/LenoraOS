@@ -2,9 +2,12 @@
 #include <common/types.h>
 #include <gdt.h>
 #include <hardware/interrupt.h>
+#include <hardware/pci.h>
 #include <drivers/driver.h>
 #include <drivers/keyboard.h>
 #include <drivers/mouse.h>
+
+
 using namespace lenora;
 using namespace lenora::drivers;
 using namespace lenora::common;
@@ -176,6 +179,9 @@ extern "C" void kmain(void *multiboot_struct, uint32_t MAGIC)
 	MouseDriver mouse(&interrupts, &mshandler);
 	drvManager.AddDriver(&mouse);
 	printf("Mouse is ready...\n");
+	
+	PCIcontroller PCIController;
+	PCIController.SelectDrivers(&drvManager);
 	
 	drvManager.ActivateAll();
 	printf("Activating all drivers.\n");
