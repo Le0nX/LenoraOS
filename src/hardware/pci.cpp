@@ -69,7 +69,7 @@ void PCIcontroller::SelectDrivers(lenora::drivers::DriverManager* drvManager)
 			for(int func=0; func<numFunc; func++){
 				PCIdeviceDescriptor device = GetDeviceDescriptor(bus, dev, func);
 				
-				if (device.vendor_id == 0x0000 || device.vendor_id == 0x1111)  // no devices
+				if (device.vendor_id == 0x0000 || device.vendor_id == 0xFFFF)  // no devices
 					break;
 					
 				printf("PCI BUS "); // DEBUG удали меня 
@@ -81,6 +81,13 @@ void PCIcontroller::SelectDrivers(lenora::drivers::DriverManager* drvManager)
 				printf(" FUNCTION ");
 				hexPrint(func & 0xFF);
 				
+				printf(" = VENDOR ");
+                hexPrint((device.vendor_id & 0xFF00) >> 8);
+                hexPrint(device.vendor_id & 0xFF);
+                printf(", DEVICE ");
+                hexPrint((device.device_id & 0xFF00) >> 8);
+                hexPrint(device.device_id & 0xFF);
+                				
 				printf("\n");
 			}
 		}
