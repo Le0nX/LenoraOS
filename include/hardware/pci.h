@@ -6,31 +6,36 @@
 #include <drivers/driver.h>
 #include <hardware/interrupt.h>
 
+namespace lenora{
+	
+	namespace hardware{
+		
 
   class PCIdeviceDescriptor
   {
 	public:
-		common::uint32_t portBase;
-		common::uint32_t interrupt;
+		lenora::common::uint32_t portBase;
+		lenora::common::uint32_t interrupt;
 		
-		common::uint16_t bus;
-	    common::uint16_t device;
-	    common::uint16_t function;
+		lenora::common::uint16_t bus;
+	    lenora::common::uint16_t device;
+	    lenora::common::uint16_t function;
 	    
-	    common::uint16_t vendor_id;
-	    common::uint16_t device_id;
+	    lenora::common::uint16_t vendor_id;
+	    lenora::common::uint16_t device_id;
 	    
-	    common::uint8_t class_id;
-	    common::uint8_t subclass_id;
-	    common::uint8_t interface_id;
+	    lenora::common::uint8_t class_id;
+	    lenora::common::uint8_t subclass_id;
+	    lenora::common::uint8_t interface_id;
 	    
-	    common::uint8_t version;
+	    lenora::common::uint8_t revision;
 	    
 	    PCIdeviceDescriptor();
 	    ~PCIdeviceDescriptor();
   };
 
-  class PCIcontroller{
+  class PCIcontroller
+  {
   	
 		lenora::hardware::Port32bit dataPort;
 		lenora::hardware::Port32bit commandPort;
@@ -39,13 +44,17 @@
 		PCIcontroller();
 		~PCIcontroller();
 		
-		common::uint32_t Read(common::uint16_t bus, common::uint16_t device, 
-							  common::uint16_t function, common::uint32_t offset);
+		lenora::common::uint32_t Read(lenora::common::uint16_t bus, lenora::common::uint16_t device, 
+							  lenora::common::uint16_t function, lenora::common::uint32_t offset);
 							  
-		void Write(common::uint16_t bus, common::uint16_t device, common::uint16_t function, 
-										 common::uint32_t offset, common::uint32_t value);
-		bool DeviceFunctions(common::uint16_t bus, common::uint16_t device);
+		void Write(lenora::common::uint16_t bus, lenora::common::uint16_t device, lenora::common::uint16_t function, 
+										 lenora::common::uint32_t offset, lenora::common::uint32_t value);
+		bool DeviceFunctions(lenora::common::uint16_t bus, lenora::common::uint16_t device);
 		
-		void SelectDrivers(lenora::drivers::DriverManager* drvManager, );							 
-
+		void SelectDrivers(lenora::drivers::DriverManager* drvManager);							 
+		PCIdeviceDescriptor GetDeviceDescriptor(lenora::common::uint16_t bus, lenora::common::uint16_t device,
+																	  lenora::common::uint16_t function);
   };
+ }
+}
+#endif
