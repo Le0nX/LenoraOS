@@ -2,9 +2,12 @@
 #include <common/types.h>
 #include <gdt.h>
 #include <hardware/interrupt.h>
+#include <hardware/pci.h>
 #include <drivers/driver.h>
 #include <drivers/keyboard.h>
 #include <drivers/mouse.h>
+
+
 using namespace lenora;
 using namespace lenora::drivers;
 using namespace lenora::common;
@@ -66,6 +69,15 @@ void printf(const char* str)
 		}
 	}
 }
+
+void hexPrint(uint8_t key)
+ {
+     char* x = "00";
+     char* hex = "0123456789ABCDEF";
+     x[0] = hex[(key >> 4) & 0xF];
+     x[1] = hex[key & 0xF];
+     printf(x);
+ }
 
 /**
  * Вызов конструкторов из секции начинающейся в start_ctors 
@@ -167,6 +179,9 @@ extern "C" void kmain(void *multiboot_struct, uint32_t MAGIC)
 	MouseDriver mouse(&interrupts, &mshandler);
 	drvManager.AddDriver(&mouse);
 	printf("Mouse is ready...\n");
+	
+	PCIcontroller PCIController;
+	PCIController.SelectDrivers(&drvManager);
 	
 	drvManager.ActivateAll();
 	printf("Activating all drivers.\n");
