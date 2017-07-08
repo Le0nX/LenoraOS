@@ -70,7 +70,7 @@ void PCIcontroller::SelectDrivers(lenora::drivers::DriverManager* drvManager)
 				PCIdeviceDescriptor device = GetDeviceDescriptor(bus, dev, func);
 				
 				if (device.vendor_id == 0x0000 || device.vendor_id == 0xFFFF)  // no devices
-					break;
+					continue;
 					
 				printf("PCI BUS "); // DEBUG удали меня 
 				hexPrint(bus & 0xFF);
