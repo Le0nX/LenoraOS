@@ -58,18 +58,38 @@ namespace lenora{
 		PCIcontroller();
 		~PCIcontroller();
 		
-		lenora::common::uint32_t Read(lenora::common::uint16_t bus, lenora::common::uint16_t device, 
-							  lenora::common::uint16_t function, lenora::common::uint32_t offset);
+		lenora::common::uint32_t Read(lenora::common::uint16_t bus, 
+									  lenora::common::uint16_t device, 
+									  lenora::common::uint16_t function, 
+									  lenora::common::uint32_t offset);
 							  
-		void Write(lenora::common::uint16_t bus, lenora::common::uint16_t device, lenora::common::uint16_t function, 
-										 lenora::common::uint32_t offset, lenora::common::uint32_t value);
+							  
+		void Write(lenora::common::uint16_t bus, lenora::common::uint16_t device, 
+												 lenora::common::uint16_t function, 
+												 lenora::common::uint32_t offset,
+												 lenora::common::uint32_t value);
+										  
+										  
 		bool DeviceFunctions(lenora::common::uint16_t bus, lenora::common::uint16_t device);
 		
-		void SelectDrivers(lenora::drivers::DriverManager* drvManager, lenora::hardware::InterruptManager interrupts);							 
-		PCIdeviceDescriptor GetDeviceDescriptor(lenora::common::uint16_t bus, lenora::common::uint16_t device,
+		
+		lenora::drivers::Driver* GetDriver(PCIdeviceDescriptor dev, 
+											lenora::hardware::InterruptManager* interrupts);
+		
+		
+		void SelectDrivers(lenora::drivers::DriverManager* drvManager, 
+						   lenora::hardware::InterruptManager* interrupts);	
+						   						 
+						   						 
+		PCIdeviceDescriptor GetDeviceDescriptor(lenora::common::uint16_t bus, 
+												lenora::common::uint16_t device, 
 												lenora::common::uint16_t function);
-		BaseAddressRegister GetBaseAddressRegister(lenora::common::uint16_t bus, lenora::common::uint16_t device, 
-												   lenora::common::uint16_t function, lenora::common::uint16_t bar);
+												
+												
+		BaseAddressRegister GetBaseAddressRegister(lenora::common::uint16_t bus, 
+												   lenora::common::uint16_t device, 
+												   lenora::common::uint16_t function, 
+												   lenora::common::uint16_t bar);
   };
  }
 }
