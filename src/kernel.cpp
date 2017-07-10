@@ -181,7 +181,7 @@ extern "C" void kmain(void *multiboot_struct, uint32_t MAGIC)
 	printf("Mouse is ready...\n");
 	
 	PCIcontroller PCIController;
-	PCIController.SelectDrivers(&drvManager);
+	PCIController.SelectDrivers(&drvManager, &interrupts);
 	
 	drvManager.ActivateAll();
 	printf("Activating all drivers.\n");
