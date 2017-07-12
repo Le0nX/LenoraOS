@@ -30,18 +30,34 @@ namespace lenora{
 				lenora::common::uint8_t* GetFrameBuffer();
 				
 				// 
-				virtual void PutPixel(lenora::common::uint32_t x, lenora::common::uint32_t y, lenora::common::uint8_t colorIndex);
-				virtual lenora::common::uint8_t GetColorIndex(lenora::common::uint8_t r, lenora::common::uint8_t g, lenora::common::uint8_t b);
+				virtual void PutPixel(lenora::common::uint32_t x, 
+									  lenora::common::uint32_t y, 
+									  lenora::common::uint8_t colorIndex);
+									  
+									  
+				virtual lenora::common::uint8_t GetColorIndex(lenora::common::uint8_t r, 
+															  lenora::common::uint8_t g, 
+															  lenora::common::uint8_t b);
 				
 			public:
 				VideoGraphicsArray();
 				virtual ~VideoGraphicsArray();
 				
-				virtual bool SupportsMode(lenora::common::uint32_t width, lenora::common::uint32_t height, lenora::common::uint32_t colordepth);
-				virtual bool SetMode(lenora::common::uint32_t width, lenora::common::uint32_t height, lenora::common::uint32_t colordepth);
+				virtual bool SupportsMode(lenora::common::uint32_t width, 
+										  lenora::common::uint32_t height, 
+										  lenora::common::uint32_t colordepth);
+										  
+										  
+				virtual bool SetMode(lenora::common::uint32_t width, 
+								     lenora::common::uint32_t height, 
+									 lenora::common::uint32_t colordepth);
 				
 				// get index in table
-				virtual void PutPixel(lenora::common::uint32_t x, lenora::common::uint32_t y, lenora::common::uint8_t r, lenora::common::uint8_t g, lenora::common::uint8_t b); 
+				virtual void PutPixel(lenora::common::uint32_t x, 
+									  lenora::common::uint32_t y, 
+									  lenora::common::uint8_t r, 
+									  lenora::common::uint8_t g, 
+									  lenora::common::uint8_t b); 
 		};
 		
 	
