@@ -27,7 +27,41 @@ VideoGraphicsArray::~VideoGraphicsArray()
 
 void VideoGraphicsArray::WriteRegisters(uint8_t* registers)
 {
+	//misc 
+	miscPort.Write(*(registers++));
 	
+	//seuence
+	for (uint8_t i=0; i<5; i++){
+		sequenceIndexPort.Write(i);
+		sequenceDataPort.Write(*(registers++));
+	}
+	
+	//cathode tube controller
+	
+	crtcIndexPort.Write(0x03);
+	crtcDataPort.Write(crtcDataPort.Read() | 0x80);   // set the first bit to one
+	crtcIndexPort.Write(0x11); 
+	crtcDataPort.Write(crtcDataPort.Read() & ~0x80);  // set the first bit zero
+	
+	registers[0x03] = registers[0x03] | 0x80;         // set the first bit to one
+		
+	for (uint8_t i=0; i<25; i++){
+		crtcIndexPort.Write(i);
+		crtcDataPort.Write(*(registers++));
+	}
+	
+	//graphics controller
+	for (uint8_t i=0; i<9; i++){
+		graphicsControllerIndexPort.Write(i);
+		graphicsControllerDataPort.Write(*(registers++));
+	}
+	
+	//attribute controller
+	for (uint8_t i=0; i<21; i++){
+		attributeControllerResetPort.Read();
+		attributeControllerIndexPort.Write(i);
+		attributeControllerWritePort.Write(*(registers++));
+	}		
 }
 
 uint8_t* VideoGraphicsArray::GetFrameBuffer()
