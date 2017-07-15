@@ -6,7 +6,13 @@ using namespace lenora::hardware;
 
 void printf(const char* str);
 
-
+/**
+ * \brief Interrupt Handler Class.
+ * Handles interrupt number and passes it to Interrupt Manager
+ * 
+ * Обработчик прерываний. Принимает номер прерывания и указатель на менеджера 
+ * прерываний. После чего добавляем хендлер в массив. .
+ */ 
 
 InterruptHandler::InterruptHandler(uint8_t interruptNumber, InterruptManager* interruptManager)
 {
