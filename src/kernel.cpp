@@ -6,6 +6,7 @@
 #include <drivers/driver.h>
 #include <drivers/keyboard.h>
 #include <drivers/mouse.h>
+#include <drivers/vga.h>
 
 
 using namespace lenora;
@@ -183,11 +184,21 @@ extern "C" void kmain(void *multiboot_struct, uint32_t MAGIC)
 	PCIcontroller PCIController;
 	PCIController.SelectDrivers(&drvManager, &interrupts);
 	
+	
+	VideoGraphicsArray vga;
+	
+	
 	drvManager.ActivateAll();
 	printf("Activating all drivers.\n");
 
 	interrupts.Activate();
 	printf("Interrupts are activated.\n");
+	
+	
+	vga.SetMode(320, 200, 8);
+	for (uint32_t y = 0; y < 200; y++)
+		for (uint32_t x = 0; x < 320; x++)
+			vga.PutPixel(x, y, 0x00, 0x00, 0xA8);
 	
 	printf("Welcome to Lenora OS...\n");
 	printf("Moscow 2017\n");

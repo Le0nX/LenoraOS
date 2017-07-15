@@ -1,8 +1,8 @@
 
 #include <drivers/vga.h>
 
-using namespace common;
-using namespace drivers;
+using namespace lenora::common;
+using namespace lenora::drivers;
 
 
 VideoGraphicsArray::VideoGraphicsArray()
@@ -14,10 +14,9 @@ VideoGraphicsArray::VideoGraphicsArray()
 				graphicsControllerIndexPort(0x3CE),
 				graphicsControllerDataPort(0x3CF),
 				attributeControllerIndexPort(0x3C0),
-				attributeControllerReadPort(0x3C0),
-				attributeControllerWritePort(0x3C1),
-				attributeControllerResetPort(0x3DA),
-  
+				attributeControllerReadPort(0x3C1),
+				attributeControllerWritePort(0x3C0),
+				attributeControllerResetPort(0x3DA)
 {
 	
 }
@@ -44,7 +43,7 @@ void VideoGraphicsArray::WriteRegisters(uint8_t* registers)
 	crtcDataPort.Write(crtcDataPort.Read() & ~0x80);  // set the first bit zero
 	
 	registers[0x03] = registers[0x03] | 0x80;         // set the first bit to one
-	registers[0x11] = registers[0x11] & ~0x80         // set the first bit zero
+	registers[0x11] = registers[0x11] & ~0x80;         // set the first bit zero
 		
 	for (uint8_t i=0; i<25; i++){
 		crtcIndexPort.Write(i);
@@ -71,7 +70,7 @@ void VideoGraphicsArray::WriteRegisters(uint8_t* registers)
 
 
 				
-bool VideoGraphicsArray::SupportsMode(uint32_t width, uint32_t height,  colordepth) // 320x200 8bit color
+bool VideoGraphicsArray::SupportsMode(uint32_t width, uint32_t height,  uint32_t colordepth) // 320x200 8bit color
 {
 	return width == 320 && height == 200 && colordepth == 8;
 }
@@ -106,15 +105,27 @@ bool VideoGraphicsArray::SetMode(uint32_t width, uint32_t height, uint32_t color
 	return true;
 }
 
-uint8_t* VideoGraphicsArray::GetFrameBuffer()
+uint8_t* VideoGraphicsArray::GetFrameBufferSegment()
 {
+	graphicsControllerIndexPort.Write(0x06);  // looking for the index number 6 in the graphics controller
+	uint32_t segmentNumber = ((graphicsControllerDataPort.Read() >> 2) & 0x03); // del two last bits 
 	
+	switch(segmentNumber){
+		
+		default: 
+		case 0: return (uint8_t*)0x00000;  // write data to memory location
+		case 1: return (uint8_t*)0xA0000;
+		case 2: return (uint8_t*)0xB0000;
+		case 3: return (uint8_t*)0xB8000;
+		
+	}
 }
 
 
 void VideoGraphicsArray::PutPixel(uint32_t x, uint32_t y, uint8_t colorIndex)
 {
-	
+	uint8_t* pixelAddress = GetFrameBufferSegment() + 320*y + x;
+	*pixelAddress = colorIndex;
 }
 
 
