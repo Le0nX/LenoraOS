@@ -44,6 +44,7 @@ void VideoGraphicsArray::WriteRegisters(uint8_t* registers)
 	crtcDataPort.Write(crtcDataPort.Read() & ~0x80);  // set the first bit zero
 	
 	registers[0x03] = registers[0x03] | 0x80;         // set the first bit to one
+	registers[0x11] = registers[0x11] & ~0x80         // set the first bit zero
 		
 	for (uint8_t i=0; i<25; i++){
 		crtcIndexPort.Write(i);
@@ -61,25 +62,13 @@ void VideoGraphicsArray::WriteRegisters(uint8_t* registers)
 		attributeControllerResetPort.Read();
 		attributeControllerIndexPort.Write(i);
 		attributeControllerWritePort.Write(*(registers++));
-	}		
-}
-
-uint8_t* VideoGraphicsArray::GetFrameBuffer()
-{
+	}
 	
+	attributeControllerResetPort.Read();
+	attributeControllerIndexPort.Write(0x20);
+			
 }
 
-
-void VideoGraphicsArray::PutPixel(uint32_t x, uint32_t y, uint8_t colorIndex)
-{
-	
-}
-
-
-uint8_t VideoGraphicsArray::GetColorIndex(uint8_t r, uint8_t g, uint8_t b)
-{
-	
-}
 
 				
 bool VideoGraphicsArray::SupportsMode(uint32_t width, uint32_t height,  colordepth) // 320x200 8bit color
@@ -116,8 +105,27 @@ bool VideoGraphicsArray::SetMode(uint32_t width, uint32_t height, uint32_t color
 	WriteRegisters(g_320x200x256);
 	return true;
 }
-				
-void VideoGraphicsArray::PutPixel(uint32_t x, uint32_t y, uint8_t r, uint8_t g, uint8_t b)
+
+uint8_t* VideoGraphicsArray::GetFrameBuffer()
 {
 	
 }
+
+
+void VideoGraphicsArray::PutPixel(uint32_t x, uint32_t y, uint8_t colorIndex)
+{
+	
+}
+
+
+uint8_t VideoGraphicsArray::GetColorIndex(uint8_t r, uint8_t g, uint8_t b)
+{
+	if (r == 0x00 && g == 0x00 && b == 0x0A8)
+		return 0x01;     // index of default settings in virtual box
+}
+				
+void VideoGraphicsArray::PutPixel(uint32_t x, uint32_t y, uint8_t r, uint8_t g, uint8_t b)
+{
+	PutPixel(x, y, GetColorIndex(r,g,b));
+}
+
