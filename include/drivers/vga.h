@@ -14,26 +14,26 @@ namespace lenora{
 		class VideoGraphicsArray
 		{   
 			protected:
-				hardware::Port8Bit miscPort;
-				hardware::Port8Bit crtcIndexPort;
-				hardware::Port8Bit crtcDataPort;
-				hardware::Port8Bit sequenceIndexPort;
-				hardware::Port8Bit sequenceDataPort;
-				hardware::Port8Bit graphicsControllerIndexPort;
-				hardware::Port8Bit graphicsControllerDataPort;
-				hardware::Port8Bit attributeControllerIndexPort;
-				hardware::Port8Bit attributeControllerReadPort;
-				hardware::Port8Bit attributeControllerWritePort;
-				hardware::Port8Bit attributeControllerResetPort;
+				lenora::hardware::Port8bit miscPort;
+				lenora::hardware::Port8bit crtcIndexPort;
+				lenora::hardware::Port8bit crtcDataPort;
+				lenora::hardware::Port8bit sequenceIndexPort;
+				lenora::hardware::Port8bit sequenceDataPort;
+				lenora::hardware::Port8bit graphicsControllerIndexPort;
+				lenora::hardware::Port8bit graphicsControllerDataPort;
+				lenora::hardware::Port8bit attributeControllerIndexPort;
+				lenora::hardware::Port8bit attributeControllerReadPort;
+				lenora::hardware::Port8bit attributeControllerWritePort;
+				lenora::hardware::Port8bit attributeControllerResetPort;
 				
 				void WriteRegisters(lenora::common::uint8_t* registers);
-				lenora::common::uint8_t* GetFrameBuffer();
+				lenora::common::uint8_t* GetFrameBufferSegment();
 				
-				// 
-				virtual void PutPixel(lenora::common::uint32_t x, 
+				
+				/*virtual void PutPixel(lenora::common::uint32_t x, 
 									  lenora::common::uint32_t y, 
 									  lenora::common::uint8_t colorIndex);
-									  
+				*/					  
 									  
 				virtual lenora::common::uint8_t GetColorIndex(lenora::common::uint8_t r, 
 															  lenora::common::uint8_t g, 
@@ -41,7 +41,7 @@ namespace lenora{
 				
 			public:
 				VideoGraphicsArray();
-				virtual ~VideoGraphicsArray();
+				~VideoGraphicsArray();
 				
 				virtual bool SupportsMode(lenora::common::uint32_t width, 
 										  lenora::common::uint32_t height, 
@@ -57,7 +57,11 @@ namespace lenora{
 									  lenora::common::uint32_t y, 
 									  lenora::common::uint8_t r, 
 									  lenora::common::uint8_t g, 
-									  lenora::common::uint8_t b); 
+									  lenora::common::uint8_t b);
+									  
+				virtual void PutPixel(lenora::common::uint32_t x, 
+									  lenora::common::uint32_t y, 
+									  lenora::common::uint8_t colorIndex);									   
 		};
 		
 	
