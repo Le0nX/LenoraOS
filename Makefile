@@ -48,6 +48,9 @@ burniso: LenoraKernel.bin
 	grub2-mkrescue --output=Lenora.iso iso
 	rm -rf iso
 	
+mac_send: burniso
+	scp Lenora.iso le0nx@deniss-mbp:wrk/OS_dev/iso
+	
 run: burniso
 	(killall VirtualBox && sleep 1) || true
 	virtualbox --startvm "Lenora" &
