@@ -1,3 +1,6 @@
+# HELPERS:
+# $@ - targets name
+# $(@D) - searches for a dir name in target name before first /
 
 CC=g++
 AS=as
@@ -6,22 +9,25 @@ CFLAGS=-m32 -Iinclude -Wall -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti
 ASFLAGS=--32
 LDFLAGS=-melf_i386
 
+# объектные файлы
 objects = obj/loader.o \
-		  obj/gdt.o \
-		  obj/drivers/driver.o \
-		  obj/hardware/port.o \
-		  obj/hardware/interruptstub.o \
-		  obj/hardware/interrupt.o \
-		  obj/hardware/pci.o \
-		  obj/drivers/keyboard.o \
-		  obj/drivers/mouse.o \
-		  obj/drivers/vga.o \
-		  obj/kernel.o
-
+	  obj/gdt.o \
+	  obj/drivers/driver.o \
+	  obj/hardware/port.o \
+	  obj/hardware/interruptstub.o \
+	  obj/hardware/interrupt.o \
+	  obj/hardware/pci.o \
+	  obj/drivers/keyboard.o \
+	  obj/drivers/mouse.o \
+	  obj/drivers/vga.o \
+	  obj/kernel.o
+	  
+# создать объектные файлы из .cpp исходников
 obj/%.o: src/%.cpp
-	mkdir -p $(@D)
+	mkdir -p $(@D)  # создать директорию obj/
 	$(CC) $(CFLAGS) $< -o $@ 
 	
+# создать объектные файлы из .s исходников	
 obj/%.o: src/%.s
 	mkdir -p $(@D)
 	$(AS) $(ASFLAGS) -o $@ $<
@@ -48,6 +54,7 @@ burniso: LenoraKernel.bin
 	grub2-mkrescue --output=Lenora.iso iso
 	rm -rf iso
 	
+# target for building and sending iso via ssh to mac	
 mac_send: burniso
 	scp Lenora.iso le0nx@deniss-mbp:wrk/OS_dev/iso
 	
